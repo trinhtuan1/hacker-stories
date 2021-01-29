@@ -33,10 +33,7 @@ const initialStories = [
 ];
 
 const App = () => {
-  const [ searchTerm, setSearchTerm ] = useSemiPersistentState(
-    'search', 'React'
-  );
-
+  const [ searchTerm, setSearchTerm ] = React.useState('');
   const [ stories, setStories ] = React.useState(initialStories);
 
   const handleSearch = event => {
@@ -104,22 +101,16 @@ const List = ({ list }) => {
 };
 
 const Item = ({ 
-  item: {
-    url,
-    author,
-    num_comments,
-    points,
-    title
-  }
+  item
 }) => {
   return (
     <div>
       <span>
-        <a href={ url }>{ title }</a>
+        <a href={ item.url }>{ item.title }</a>
       </span>
-      <span>{ author }</span>
-      <span>{ num_comments }</span>
-      <span>{ points }</span>
+      <span>{ item.author }</span>
+      <span>{ item.num_comments }</span>
+      <span>{ item.points }</span>
     </div>
   );
 };
