@@ -29,6 +29,14 @@ const initialStories = [
     num_comments: 2,
     points: 2,
     objectID: 1,
+  },
+  {
+    title: 'Facebook',
+    url: 'http://facebook.com',
+    author: 'Mark',
+    num_comments: 3,
+    points: 5,
+    objectID: 2,
   }
 ];
 
@@ -38,6 +46,13 @@ const App = () => {
 
   const handleSearch = event => {
     setSearchTerm(event.target.value);
+  };
+
+  const handleRemoveStory = item => {
+    const newStories = stories.filter(story => (
+      story.objectID !== item.objectID
+    ));
+    setStories(newStories);
   };
 
   const searchedStories = stories.filter(story => (
@@ -56,7 +71,10 @@ const App = () => {
         <p>HelloEveryone</p>
         Search:&nbsp;
       </InputWithLabel>
-      <List list={ searchedStories } />
+      <List 
+        list={ searchedStories } 
+        onRemoveItem={ handleRemoveStory }  
+      />
     </div> 
   );
 }
@@ -92,16 +110,20 @@ const InputWithLabel = ({
   )
 }
 
-const List = ({ list }) => {
+const List = ({ list, onRemoveItem }) => {
   return list.map(item => {
     return (
-      <Item key={ item.objectID } item={ item } />
+      <Item 
+        key={ item.objectID } 
+        item={ item } 
+        onRemoveItem={ onRemoveItem }
+      />
     );
   });
 };
 
 const Item = ({ 
-  item
+  item, onRemoveItem
 }) => {
   return (
     <div>
@@ -111,6 +133,12 @@ const Item = ({
       <span>{ item.author }</span>
       <span>{ item.num_comments }</span>
       <span>{ item.points }</span>
+      <span>
+        <button
+          type="button"
+          onClick={ () => onRemoveItem(item) }
+        >Dismiss</button>
+      </span>
     </div>
   );
 };
