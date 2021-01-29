@@ -13,30 +13,31 @@ const useSemiPersistentState = (key, initialState) => {
   return [ value, setValue ];
 };
 
-
+const initialStories = [
+  {
+    title: 'React',
+    url: 'https://reactjs.org',
+    author: 'Jordan Walke',
+    num_comments: 3,
+    points: 4,
+    objectID: 0
+  },
+  {
+    title: 'Redux',
+    url: 'https://redux.js.org',
+    author: 'Dan Abramov',
+    num_comments: 2,
+    points: 2,
+    objectID: 1,
+  }
+];
 
 const App = () => {
-  const stories = [
-    {
-      title: 'React',
-      url: 'https://reactjs.org',
-      author: 'Jordan Walke',
-      num_comments: 3,
-      points: 4,
-      objectID: 0
-    },
-    {
-      title: 'Redux',
-      url: 'https://redux.js.org',
-      author: 'Dan Abramov',
-      num_comments: 2,
-      points: 2,
-      objectID: 1,
-    }
-  ];
   const [ searchTerm, setSearchTerm ] = useSemiPersistentState(
     'search', 'React'
   );
+
+  const [ stories, setStories ] = React.useState(initialStories);
 
   const handleSearch = event => {
     setSearchTerm(event.target.value);
