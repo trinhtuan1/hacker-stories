@@ -1,6 +1,20 @@
 import React from 'react';
 import './App.css';
 
+const useSemiPersistentState = (key, initialState) => {
+  const [ value, setValue ] = React.useState(
+    localStorage.getItem(key) || initialState
+  );
+
+  React.useEffect(() => {
+    localStorage.setItem(key, value);
+  }, [key, value]);
+
+  return [ value, setValue ];
+};
+
+
+
 const App = () => {
   const stories = [
     {
@@ -20,14 +34,12 @@ const App = () => {
       objectID: 1,
     }
   ];
-
-  const [ searchTerm, setSearchTerm ] = React.useState(
-    localStorage.getItem('search') || 'React'
+  const [ searchTerm, setSearchTerm ] = useSemiPersistentState(
+    'search', 'React'
   );
 
   const handleSearch = event => {
     setSearchTerm(event.target.value);
-    localStorage.setItem('search', event.target.value);
   };
 
   const searchedStories = stories.filter(story => (
@@ -37,28 +49,49 @@ const App = () => {
   return (
     <div>
       <h1>My Hacker Stories</h1>
-      <Search 
-        search={ searchTerm } 
-        onSearch={ handleSearch } 
-      /> 
+      <InputWithLabel
+        id="search"
+        value={ searchTerm }
+        onInputChange={ handleSearch }
+        isFocused
+      >
+        <p>HelloEveryone</p>
+        Search:&nbsp;
+      </InputWithLabel>
       <List list={ searchedStories } />
     </div> 
   );
 }
 
-const Search = ({ search, onSearch }) => {
-  return (
-    <div>
-      <label htmlFor="search">Search: </label>
-      <input 
-        type="text"
-        id="search"
-        value={ search }
-        onChange={ onSearch }
-      />
-    </div>
-  );
+const InputWithLabel = ({ 
+  id, 
+  value, 
+  onInputChange,
+  type= 'text',
+  children,
+  isFocused
+}) => {
+  const inputRef = React.useRef();
+  
+  React.useEffect(() => {
+    if(isFocused && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isFocused]);
 
+  return (
+    <React.Fragment>
+      <label htmlFor={ id }>{ children }</label>
+      <input
+        ref={ inputRef }
+        id={ id }
+        type={ type }
+        value={ value }
+        autoFocus={ isFocused }
+        onChange={ onInputChange }
+      />
+    </React.Fragment>
+  )
 }
 
 const List = ({ list }) => {
