@@ -40,13 +40,25 @@ const initialStories = [
   }
 ];
 
+const getAsyncStories = () => {
+  return new Promise(resolve => {
+    setTimeout(() => resolve({ data: { stories: initialStories } }), 1500);
+  });
+};
+
 const App = () => {
   const [ searchTerm, setSearchTerm ] = React.useState('');
-  const [ stories, setStories ] = React.useState(initialStories);
+  const [ stories, setStories ] = React.useState([]);
 
   const handleSearch = event => {
     setSearchTerm(event.target.value);
   };
+
+  React.useEffect(() => {
+    getAsyncStories().then(result => {
+      setStories(result.data.stories);
+    });
+  }, []);
 
   const handleRemoveStory = item => {
     const newStories = stories.filter(story => (
