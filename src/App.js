@@ -58,10 +58,12 @@ const App = () => {
 
   React.useEffect(() => {
     setIsLoading(true);
-    getAsyncStories().then(result => {
-      setStories(result.data.stories);
-      setIsLoading(false);
-    });
+    getAsyncStories()
+      .then(result => {
+        setStories(result.data.stories);
+        setIsLoading(false);
+      })
+      .catch(() => setIsError(true));
   }, []);
 
   const handleRemoveStory = item => {
